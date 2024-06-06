@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "5e579aca-cfc8-454a-add0-cc9fde0ec1b4",
+		"name": "calculator_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33567588"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"Usename\":\"asad u allah\",\n    \"Userpassword\":\"asad123\",\n    \"Useremail\":\"asad123@gmail.com\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/user",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Username\":\"hashmi\",\n    \"Userpassword\":\"hashmi12\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/user/login",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/calculator/add",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Substract",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"No1\":75.6,\n    \"No2\":80.4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator/substract",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"substract"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Multiply",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"No1\":75.6,\n    \"No2\":80.4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator/multiply",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"multiply"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Divide",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"No1\":75.6,\n    \"No2\":80.4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator/divide",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"divide"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getalldata",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:1323/calculator",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getbyid",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator:\"20\"",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator:\"20\""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletebyid",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator:\"20\"",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator:\"20\""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Updatebyid",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator/25",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"25"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getbysymbol",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323/calculator/+",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"calculator",
+						"+"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fileprocessor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1323//textfileprocessor",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"",
+						"textfileprocessor"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
