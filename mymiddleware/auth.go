@@ -35,18 +35,12 @@ func (m *middleware) SomeMiddleware(next, stop echo.HandlerFunc) echo.HandlerFun
 
 		apitoken := headers.Get("Authorization")
 
-		err, verify := tokenvalidation.Isvalid(apitoken)
+		err := tokenvalidation.Isvalid(apitoken)
 		if err != nil {
 			fmt.Println("im in err")
 			m.SetError(http.StatusBadRequest, err.Error())
 			return stop(c)
 		}
-		if !verify {
-			fmt.Println("im in not verify section")
-			m.SetError(401, "Un-Authorized")
-			return stop(c)
-		}
-
 		return next(c)
 	}
 }

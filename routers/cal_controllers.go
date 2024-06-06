@@ -1,7 +1,6 @@
 package routers
 
 import (
-	tokenvalidation "calculator/TokenValidation"
 	"calculator/db"
 	"calculator/models"
 	"calculator/myjwt"
@@ -163,23 +162,23 @@ func Login(c echo.Context) error {
 
 func Substract(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	var input models.CalculatorReq
 
-	err = c.Bind(&input)
+	err := c.Bind(&input)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -210,23 +209,23 @@ func Substract(c echo.Context) error {
 
 func Multiply(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	var input models.CalculatorReq
 
-	err = c.Bind(&input)
+	err := c.Bind(&input)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -257,23 +256,23 @@ func Multiply(c echo.Context) error {
 
 func Division(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	var input models.CalculatorReq
 
-	err = c.Bind(&input)
+	err := c.Bind(&input)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -304,19 +303,19 @@ func Division(c echo.Context) error {
 
 func Getall(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	calculations, err := db.Readall()
 	if err != nil {
@@ -333,19 +332,19 @@ func Getall(c echo.Context) error {
 
 func Getbyid(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	request_id := c.Param("id")
 	if request_id == "" {
@@ -375,19 +374,19 @@ func Getbyid(c echo.Context) error {
 
 func Getbysymbol(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	request_symbol := c.Param("operation")
 	if request_symbol == "" {
@@ -408,19 +407,19 @@ func Getbysymbol(c echo.Context) error {
 
 func Delete(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	request_id := c.Param("id")
 	if request_id == "" {
@@ -447,23 +446,23 @@ func Delete(c echo.Context) error {
 
 func Update(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	err, verify := tokenvalidation.Isvalid(apitoken)
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// err, verify := tokenvalidation.Isvalid(apitoken)
+	// if err != nil {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
-	if !verify {
-		return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	}
+	// if !verify {
+	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
+	// }
 
 	var cal models.CalculatorReq
 
-	err = c.Bind(&cal)
+	err := c.Bind(&cal)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
