@@ -15,3 +15,7 @@ containing two tables named Calculator with columns id, no1, no2, operation, res
 #8- Authenticate and Authorized the token after that operation will be perfomed 
 #9- a part of a program also read the file from the user and gives the result total spaces, total vowels, total words, total sentences and word frequecy each 
 function is run in threads 
+#10- SUMMARY:This program is all about getthing in touch with the concept of echo framework and use of middleware understanding of CURD operation getting in touch
+with data base making their tables and their queries i also use concurrency in a specific part of a code.
+
+#11- i also importe the collection of urls you can test them with post man by giving the following parameters to them.
