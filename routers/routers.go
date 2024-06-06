@@ -20,4 +20,5 @@ func Routes(e *echo.Echo) {
 	e.DELETE("/calculator/:id", m.SomeMiddleware(Delete, m.SomeErrorHandler))
 	e.PUT("/calculator/:id", m.SomeMiddleware(Update, m.SomeErrorHandler))
 	e.GET("/calculator/symbol/:operation", m.SomeMiddleware(Getbysymbol, m.SomeErrorHandler))
+	e.POST("/textfileprocessor", m.SomeMiddleware(TextfilePro, m.SomeErrorHandler))
 }

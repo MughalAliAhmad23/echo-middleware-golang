@@ -47,3 +47,8 @@ type Userlogin struct {
 	Username     string `json:"Username"`
 	Userpassword string `json:"Userpassword"`
 }
+
+type Textfileresp struct {
+	Status int
+	Msg    string
+}

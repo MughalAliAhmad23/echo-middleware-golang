@@ -2,13 +2,16 @@ package routers
 
 import (
 	"calculator/db"
+	"calculator/filereader"
 	"calculator/models"
 	"calculator/myjwt"
 	"database/sql"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"github.com/labstack/echo"
 )
@@ -78,6 +81,52 @@ func Add(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, resp)
 
+}
+
+func TextfilePro(c echo.Context) error {
+
+	resp := make(chan string, 5)
+
+	var wg sync.WaitGroup
+
+	defer filereader.Timer("main")()
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	src, err := file.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	defer src.Close()
+	filedata, err := ioutil.ReadAll(src)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	wg.Add(1)
+	go filereader.Wordfrequeny(string(filedata), &wg, resp)
+	wg.Add(1)
+	go filereader.SpaceCounter(string(filedata), &wg, resp)
+	wg.Add(1)
+	go filereader.Wordcounter(string(filedata), &wg, resp)
+	wg.Add(1)
+	go filereader.VowelsCounter(string(filedata), &wg, resp)
+	wg.Add(1)
+	go filereader.LineCounter(string(filedata), &wg, resp)
+
+	wg.Wait()
+	close(resp)
+	for val := range resp {
+		fmt.Println(val)
+	}
+	fmt.Println("iteratig iver channel")
+	fmt.Println(len(resp))
+	// for i := 0; i < 5; i++ {
+	// 	fmt.Println(<-resp)
+	// }
+	fmt.Println("main exists")
+	return nil
 }
 
 func Crediantials(c echo.Context) error {
