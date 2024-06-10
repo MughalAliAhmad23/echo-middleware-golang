@@ -85,7 +85,7 @@ func Add(c echo.Context) error {
 
 func TextfilePro(c echo.Context) error {
 
-	resp := make(chan string, 5)
+	resp := make(chan string, 4)
 
 	var wg sync.WaitGroup
 
@@ -104,23 +104,75 @@ func TextfilePro(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
+	val := c.FormValue("goroutines")
+	if val == "" {
+		return c.JSON(http.StatusBadRequest, "value of goroutines is empty!")
+	}
+	intval, err := strconv.Atoi(val)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	//fmt.Println(intval)
+
+	fmt.Println("length of characters in a file :", len(string(filedata)))
+
+	totallines := 0
+
+	totalslices := intval
+
+	for i := 0; i < len(filedata); i++ {
+		if filedata[i] == '.' {
+			totallines++
+		}
+	}
+
+	fmt.Println("Total number of lines:", totallines)
+
+	linesEachSlice := totallines / totalslices
+
+	// no := len(string(filedata)) / 5
+	// fmt.Println("characters in each slice", no)
+
+	var arr [intval]string //size ma da rha honint ma or type ma string da rha hon...
+
+	s := make([]string, intval)
+
+	for i := 0; i < totalslices; i++ {
+		if i < totalslices-1 {
+			s[i] = string(filedata)[i*linesEachSlice : i*linesEachSlice+linesEachSlice]
+			arr[i] = s[i]
+			// fmt.Println("slice :", "/n")
+			// fmt.Println(arr[i])
+		} else {
+			s[i] = string(filedata)[i*linesEachSlice:]
+			arr[i] = s[i]
+			//fmt.Println("slice :", "/n", arr[i])
+		}
+	}
+	//fmt.Println(arr)
+	// for j := 0; j < totalslices; j++ {m
+	// 	fmt.Println("Array index :", arr[j])
+	// 	fmt.Println(arr[j])
+	// }
+
 	wg.Add(1)
-	go filereader.Wordfrequeny(string(filedata), &wg, resp)
+	go filereader.Wordfrequeny(string(filedata), &wg, resp, arr)
 	wg.Add(1)
-	go filereader.SpaceCounter(string(filedata), &wg, resp)
+	go filereader.SpaceCounter(string(filedata), &wg, resp, arr)
 	wg.Add(1)
-	go filereader.Wordcounter(string(filedata), &wg, resp)
+	go filereader.Wordcounter(string(filedata), &wg, resp, arr)
 	wg.Add(1)
-	go filereader.VowelsCounter(string(filedata), &wg, resp)
-	wg.Add(1)
-	go filereader.LineCounter(string(filedata), &wg, resp)
+	go filereader.VowelsCounter(string(filedata), &wg, resp, arr)
+	// wg.Add(1)
+	// go filereader.LineCounter(string(filedata), &wg, resp)
 
 	wg.Wait()
 	close(resp)
 	for val := range resp {
 		fmt.Println(val)
 	}
-	fmt.Println("iteratig iver channel")
+	fmt.Println("iteratig over channel")
 	fmt.Println(len(resp))
 	// for i := 0; i < 5; i++ {
 	// 	fmt.Println(<-resp)
