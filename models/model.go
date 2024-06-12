@@ -32,10 +32,10 @@ type User struct {
 	Useremail    string `json:"Useremail"`
 }
 type UserDb struct {
-	Id           int    `json:"Id"`
-	Username     string `json:"Username"`
-	Userpassword string `json:"Userpassword"`
-	Useremail    string `json:"Useremail"`
+	Id           int    `db:"id"`
+	Username     string `db:"username"`
+	Userpassword string `db:"userpassword"`
+	Useremail    string `db:"useremail"`
 }
 type UserResp struct {
 	Id           int    `json:"Id"`
@@ -46,9 +46,4 @@ type UserResp struct {
 type Userlogin struct {
 	Username     string `json:"Username"`
 	Userpassword string `json:"Userpassword"`
-}
-
-type Textfileresp struct {
-	Status int
-	Msg    string
 }

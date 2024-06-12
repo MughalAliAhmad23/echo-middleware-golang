@@ -1,34 +1,33 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 
-	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
-var Dbcon *sqlx.DB
+var dbConn *sql.DB
 
 const (
-	DB_Host = "tcp(localhost:3306)"
-	DB_User = "root"
-	DB_Name = "my_db"
-	DB_Pass = "123456"
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "new_password"
+	dbname   = "aliahmaddb"
 )
 
-func Connection() {
+func Connect() (*sql.DB, error) {
 	var err error
-
-	connect := DB_User + ":" + DB_Pass + "@" + DB_Host + "/" + DB_Name
-	Dbcon, err = sqlx.Open("mysql", connect)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	dbConn, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
-		fmt.Println("Error connecting to the database:", err)
-		return
-	} else {
-		fmt.Println("db is connected")
+		fmt.Println("Error connecting to database", err)
+		return nil, err
 	}
-	//defer Dbcon.Close()
-	err = Dbcon.Ping()
+	err = dbConn.Ping()
 	if err != nil {
-		fmt.Println(err.Error())
+		return nil, err
 	}
+	return dbConn, nil
 }

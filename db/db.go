@@ -6,49 +6,32 @@ import (
 )
 
 func Insert(data models.CalculatorDb) (*models.CalculatorDb, error) {
-	query := "INSERT INTO Calculator (no1, no2, operation, result) VALUES (?,?,?,?)"
-	stmt, err := Dbcon.Prepare(query)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	defer stmt.Close()
-	result, err := Dbcon.Exec(query, data.No1, data.No2, data.Operation, data.Result)
+	query := "INSERT INTO Calculator (no1, no2, opertion, result) VALUES ($1,$2,$3,$4)RETURNING id"
+
+	err := dbConn.QueryRow(query, data.No1, data.No2, data.Operation, data.Result).Scan(&data.Id)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 
-	lastInsertedId, err := result.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-	data.Id = int(lastInsertedId)
 	return &data, nil
 }
 
 func UserInsert(user models.UserDb) (*models.UserDb, error) {
-	query := "INSERT INTO UserRecord (username,userpassword,useremail) VALUES (?,?,?)"
-	stmt, err := Dbcon.Prepare(query)
+	query := "INSERT INTO UserRecord (username,userpassword,useremail) VALUES ($1,$2,$3) RETURNING id"
+
+	err := dbConn.QueryRow(query, user.Username, user.Userpassword, user.Useremail).Scan(&user.Id)
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
-	result, err := Dbcon.Exec(query, user.Username, user.Userpassword, user.Useremail)
-	if err != nil {
-		return nil, err
-	}
-	lastInsertedId, err := result.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-	user.Id = int(lastInsertedId)
+
 	return &user, nil
 }
 
 func Userlogin(user models.Userlogin) (bool, error) {
-	query := "SELECT 'exists' AS result FROM UserRecord WHERE username = ? AND userpassword = ? UNION SELECT 'not exists' AS result LIMIT 1"
-	rows, err := Dbcon.Query(query, user.Username, user.Userpassword)
+	query := "SELECT 'exists' AS result FROM UserRecord WHERE username = $1 AND userpassword = $2 UNION SELECT 'not exists' AS result LIMIT 1"
+
+	rows, err := dbConn.Query(query, user.Username, user.Userpassword)
 	if err != nil {
 		return false, err
 	}
@@ -74,7 +57,8 @@ func Userlogin(user models.Userlogin) (bool, error) {
 func Isuserexists(user models.User) (bool, error) {
 	isuser := false
 	query := "SELECT 'exists' AS result FROM UserRecord WHERE username = ? UNION SELECT 'notexists' AS resut LIMIT 1"
-	rows, err := Dbcon.Query(query, user.Username)
+
+	rows, err := dbConn.Query(query, user.Username)
 	if err != nil {
 		return false, nil
 	}
@@ -97,14 +81,15 @@ func Isuserexists(user models.User) (bool, error) {
 }
 
 func Readall() ([]models.CalculatorDb, error) {
-	rows, err := Dbcon.Queryx("SELECT * FROM Calculator")
+
+	rows, err := dbConn.Query("SELECT * FROM Calculator")
 	if err != nil {
 		return nil, err
 	}
 	var calculations []models.CalculatorDb
 	for rows.Next() {
 		var cal models.CalculatorDb
-		err := rows.StructScan(&cal)
+		err := rows.Scan(&cal.Id, &cal.No1, &cal.No2, &cal.Operation, &cal.Result)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -116,7 +101,8 @@ func Readall() ([]models.CalculatorDb, error) {
 
 func Readbyid(id int) (*models.CalculatorDb, error) {
 	var cal models.CalculatorDb
-	err := Dbcon.QueryRowx("SELECT * FROM Calculator WHERE id =?", id).StructScan(&cal)
+
+	err := dbConn.QueryRow("SELECT * FROM Calculator WHERE id =$1", id).Scan(&cal.Id, &cal.No1, &cal.No2, &cal.Operation, &cal.Result)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -126,7 +112,8 @@ func Readbyid(id int) (*models.CalculatorDb, error) {
 
 func Readbysymbol(sym string) ([]models.CalculatorDb, error) {
 	fmt.Println(sym)
-	rows, err := Dbcon.Queryx("SELECT * FROM Calculator WHERE operation=?", sym)
+
+	rows, err := dbConn.Query("SELECT * FROM Calculator WHERE opertion=$1", sym)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -134,7 +121,7 @@ func Readbysymbol(sym string) ([]models.CalculatorDb, error) {
 	var calculation []models.CalculatorDb
 	for rows.Next() {
 		var cal models.CalculatorDb
-		err := rows.StructScan(&cal)
+		err := rows.Scan(&cal.Id, &cal.No1, &cal.No2, &cal.Operation, &cal.Result)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
@@ -144,7 +131,8 @@ func Readbysymbol(sym string) ([]models.CalculatorDb, error) {
 	return calculation, nil
 }
 func Removebyid(id int) error {
-	_, err := Dbcon.Exec("DELETE FROM Calculator Where id = ?", id)
+
+	_, err := dbConn.Exec("DELETE FROM Calculator Where id = $1", id)
 	if err != nil {
 		return err
 	}
@@ -152,7 +140,8 @@ func Removebyid(id int) error {
 }
 
 func Reupdate(id int, no1, no2, res float64) error {
-	_, err := Dbcon.Exec("UPDATE Calculator SET no1=?, no2=?, result=? WHERE id=?", no1, no2, res, id)
+
+	_, err := dbConn.Exec("UPDATE Calculator SET no1=$1, no2=$2, result=$3 WHERE id=$4", no1, no2, res, id)
 	if err != nil {
 		return err
 	}

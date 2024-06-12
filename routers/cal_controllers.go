@@ -17,39 +17,6 @@ import (
 )
 
 func Add(c echo.Context) error {
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if apitoken == "" {
-	// 	fmt.Println("Missing authorization header")
-	// 	return c.JSON(http.StatusUnauthorized, "Missing authorization header")
-	// }
-
-	// newToken, err := jwt.Parse(apitoken, func(token *jwt.Token) (interface{}, error) {
-	// 	return []byte("Secret-key"), nil
-	// })
-
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Invalid header")
-	// }
-
-	// if !newToken.Valid {
-	// 	fmt.Println("Un-Authorized")
-	// 	return c.JSON(http.StatusUnauthorized, "Un-Authorized")
-	// } else {
-	// 	fmt.Println("Authorized")
-	// }
 
 	var input models.CalculatorReq
 
@@ -130,10 +97,7 @@ func TextfilePro(c echo.Context) error {
 
 	linesEachSlice := totallines / totalslices
 
-	// no := len(string(filedata)) / 5
-	// fmt.Println("characters in each slice", no)
 	chunksHolder := make([]string, goIntVal)
-	//var arr [intval]string //size ma da rha honint ma or type ma string da rha hon...
 
 	s := make([]string, goIntVal)
 
@@ -155,8 +119,6 @@ func TextfilePro(c echo.Context) error {
 	go filereader.Wordcounter(string(filedata), &wg, resp, chunksHolder)
 	wg.Add(1)
 	go filereader.VowelsCounter(string(filedata), &wg, resp, chunksHolder)
-	// wg.Add(1)
-	// go filereader.LineCounter(string(filedata), &wg, resp)
 
 	wg.Wait()
 	close(resp)
@@ -193,6 +155,7 @@ func Crediantials(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, resp)
 	}
+
 	res, err := db.UserInsert(models.UserDb{
 		Username:     input.Username,
 		Userpassword: input.Userpassword,
@@ -201,17 +164,20 @@ func Crediantials(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	output := models.UserResp{
 		Id:           res.Id,
 		Username:     res.Username,
 		Userpassword: res.Userpassword,
 		Useremail:    res.Useremail,
 	}
+
 	resp := models.Resp{
 		Data:    output,
 		Message: "User verified successfully",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
@@ -222,6 +188,7 @@ func Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+
 	exist, err := db.Userlogin(models.Userlogin{
 		Username:     input.Username,
 		Userpassword: input.Userpassword,
@@ -238,34 +205,22 @@ func Login(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, resp)
 	}
+
 	token, err := myjwt.GenerateToken(input.Username)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	resp := models.Resp{
 		Data:    token,
 		Message: "completed",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Substract(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	var input models.CalculatorReq
 
 	err := c.Bind(&input)
@@ -274,6 +229,7 @@ func Substract(c echo.Context) error {
 	}
 
 	result := input.No1 - input.No2
+
 	res, err := db.Insert(models.CalculatorDb{No1: input.No1,
 		No2:       input.No2,
 		Operation: "-",
@@ -282,6 +238,7 @@ func Substract(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	output := models.CalculatorResp{
 		Id:        res.Id,
 		No1:       res.No1,
@@ -289,29 +246,17 @@ func Substract(c echo.Context) error {
 		Operation: res.Operation,
 		Result:    res.Result,
 	}
+
 	resp := models.Resp{
 		Data:    output,
 		Message: "Successfully calculted substraction",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Multiply(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
 
 	var input models.CalculatorReq
 
@@ -329,6 +274,7 @@ func Multiply(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	output := models.CalculatorResp{
 		Id:        res.Id,
 		No1:       res.No1,
@@ -336,30 +282,17 @@ func Multiply(c echo.Context) error {
 		Operation: res.Operation,
 		Result:    res.Result,
 	}
+
 	resp := models.Resp{
 		Data:    output,
 		Message: "Successfully calculated multiplication",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Division(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	var input models.CalculatorReq
 
 	err := c.Bind(&input)
@@ -368,6 +301,7 @@ func Division(c echo.Context) error {
 	}
 
 	result := input.No1 / input.No2
+
 	res, err := db.Insert(models.CalculatorDb{No1: input.No1,
 		No2:       input.No2,
 		Operation: "/",
@@ -376,6 +310,7 @@ func Division(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	output := models.CalculatorResp{
 		Id:        res.Id,
 		No1:       res.No1,
@@ -383,31 +318,19 @@ func Division(c echo.Context) error {
 		Operation: res.Operation,
 		Result:    res.Result,
 	}
+
 	resp := models.Resp{
 		Data:    output,
 		Message: "Successfully calculated division",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Getall(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	calculations, err := db.Readall()
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -417,36 +340,25 @@ func Getall(c echo.Context) error {
 		Message: "Successfully Retrieved all data",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Getbyid(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	request_id := c.Param("id")
+
 	if request_id == "" {
 		return c.JSON(http.StatusBadRequest, "id can't be empty")
 	}
 
 	calculationID, err := strconv.Atoi(request_id)
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	cal, err := db.Readbyid(calculationID)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return c.JSON(http.StatusNotFound, "invalid ID")
@@ -454,64 +366,43 @@ func Getbyid(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 
 	}
+
 	resp := models.Resp{
 		Data:    cal,
 		Message: "Successfully retrieved id data",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Getbysymbol(c echo.Context) error {
 
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	request_symbol := c.Param("operation")
+	request_symbol := c.QueryParam("operation")
 	if request_symbol == "" {
 		return c.JSON(http.StatusBadRequest, "symbol can't be empty")
 	}
+
 	fmt.Println(request_symbol)
+
 	res, err := db.Readbysymbol(request_symbol)
+
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
+
 	resp := models.Resp{
 		Data:    res,
 		Message: "retrieved all symbol data",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Delete(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	request_id := c.Param("id")
+
 	if request_id == "" {
 		return c.JSON(http.StatusBadRequest, "id can't be empty")
 	}
@@ -531,25 +422,11 @@ func Delete(c echo.Context) error {
 		Message: "Successfully Deleted",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }
 
 func Update(c echo.Context) error {
-
-	// req := c.Request()
-	// headers := req.Header
-
-	// apitoken := headers.Get("Authorization")
-
-	// err, verify := tokenvalidation.Isvalid(apitoken)
-	// if err != nil {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
-	// if !verify {
-	// 	return c.JSON(http.StatusUnauthorized, "Missing Authorization Header!")
-	// }
-
 	var cal models.CalculatorReq
 
 	err := c.Bind(&cal)
@@ -566,11 +443,14 @@ func Update(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+
 	existingsymbol, err := db.Readbyid(calculation_ID)
 	if err != nil {
 		return err
 	}
+
 	var result float64
+
 	switch existingsymbol.Operation {
 	case "+":
 		result = cal.No1 + cal.No2
@@ -586,11 +466,14 @@ func Update(c echo.Context) error {
 	default:
 		return errors.New("unsupported operation")
 	}
+
 	fmt.Println(result)
+
 	err = db.Reupdate(calculation_ID, float64(cal.No1), float64(cal.No2), float64(result))
 	if err != nil {
 		return c.JSON(http.StatusNotFound, err.Error())
 	}
+
 	output := models.CalculatorResp{
 		Id:        calculation_ID,
 		No1:       cal.No1,
@@ -598,10 +481,12 @@ func Update(c echo.Context) error {
 		Operation: existingsymbol.Operation,
 		Result:    result,
 	}
+
 	resp := models.Resp{
 		Data:    output,
 		Message: "Updated Successfully",
 		Status:  http.StatusOK,
 	}
+
 	return c.JSON(http.StatusCreated, resp)
 }

@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"calculator/db"
 	"calculator/mymiddleware"
 
 	"github.com/labstack/echo"
@@ -9,6 +10,7 @@ import (
 func Routes(e *echo.Echo) {
 
 	m := mymiddleware.NewMiddleware()
+	e.POST("/migrate", db.Migration)
 	e.POST("/user", Crediantials)
 	e.POST("/user/login", Login)
 	e.POST("/calculator/add", m.SomeMiddleware(Add, m.SomeErrorHandler))
@@ -19,6 +21,6 @@ func Routes(e *echo.Echo) {
 	e.GET("/calculator/:id", m.SomeMiddleware(Getbyid, m.SomeErrorHandler))
 	e.DELETE("/calculator/:id", m.SomeMiddleware(Delete, m.SomeErrorHandler))
 	e.PUT("/calculator/:id", m.SomeMiddleware(Update, m.SomeErrorHandler))
-	e.GET("/calculator/symbol/:operation", m.SomeMiddleware(Getbysymbol, m.SomeErrorHandler))
+	e.GET("/calculator/symbol", m.SomeMiddleware(Getbysymbol, m.SomeErrorHandler))
 	e.POST("/textfileprocessor", m.SomeMiddleware(TextfilePro, m.SomeErrorHandler))
 }

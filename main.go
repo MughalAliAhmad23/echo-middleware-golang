@@ -10,7 +10,7 @@ import (
 
 func main() {
 	e := echo.New()
-	db.Connection()
+	db.Connect()
 	routers.Routes(e)
 	e.Logger.Fatal(e.Start(":1323"))
 
