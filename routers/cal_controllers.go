@@ -122,11 +122,11 @@ func TextfilePro(c echo.Context) error {
 
 	wg.Wait()
 	close(resp)
-	for val := range resp {
-		fmt.Println(val)
-	}
+	// for val := range resp {
+	// 	fmt.Println(val)
+	// }
 	fmt.Println("iteratig over channel")
-	fmt.Println(len(resp))
+	//fmt.Println(len(resp))
 
 	fmt.Println("main exists")
 	return nil

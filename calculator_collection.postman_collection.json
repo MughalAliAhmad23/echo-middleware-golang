@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "\"Usename\":\"asad u allah\",\n    \"Userpassword\":\"asad123\",\n    \"Useremail\":\"asad123@gmail.com\"\n    }",
+					"raw": "{\n    \"Username\":\"ALI\",\n    \"Userpassword\":\"ALI23\",\n    \"Useremail\":\"ALI23@gmail.com\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Username\":\"hashmi\",\n    \"Userpassword\":\"hashmi12\"\n}",
+					"raw": "{\n    \"Username\":\"alii\",\n    \"Userpassword\":\"alii\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,7 +65,22 @@
 			"name": "Add",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgyNTkxMjQsImlhdCI6MTcxODE3MjcyNCwidXNlcm5hbWUiOiJhbGlpIn0.9MQyKZKuj56rsa9Db_dPuS18VL1IMfP6kRAVE4KRSrA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"No1\":70.6,\n    \"No2\":80.4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "localhost:1323/calculator/add",
 					"host": [
@@ -84,7 +99,13 @@
 			"name": "Substract",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTc3NDAyOTIsImlhdCI6MTcxNzY1Mzg5MiwidXNlcm5hbWUiOiJuaWJyYXMifQ.GbF_4Ow88AOJZtn2IjgEgT73-550ThKwM7kkq1Ksves",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n   \"No1\":75.6,\n    \"No2\":80.4\n}",
@@ -140,10 +161,16 @@
 			"name": "Divide",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTc4MzIyNjYsImlhdCI6MTcxNzc0NTg2NiwidXNlcm5hbWUiOiJmYXJvb3EifQ.Xd9LDXkFeyxqu7RR2wNcin56Uj3Rq-8rgmmC0fObkl4",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n   \"No1\":75.6,\n    \"No2\":80.4\n}",
+					"raw": "{\n   \"No1\":50001,\n    \"No2\":5\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -189,7 +216,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgyNTkxMjQsImlhdCI6MTcxODE3MjcyNCwidXNlcm5hbWUiOiJhbGlpIn0.9MQyKZKuj56rsa9Db_dPuS18VL1IMfP6kRAVE4KRSrA",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "",
@@ -200,13 +233,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:1323/calculator:\"20\"",
+					"raw": "localhost:1323/calculator/5",
 					"host": [
 						"localhost"
 					],
 					"port": "1323",
 					"path": [
-						"calculator:\"20\""
+						"calculator",
+						"5"
 					]
 				}
 			},
@@ -277,7 +311,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgyNTkxMjQsImlhdCI6MTcxODE3MjcyNCwidXNlcm5hbWUiOiJhbGlpIn0.9MQyKZKuj56rsa9Db_dPuS18VL1IMfP6kRAVE4KRSrA",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "",
@@ -288,14 +328,20 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:1323/calculator/+",
+					"raw": "localhost:1323/calculator/symbol?operation=%2B",
 					"host": [
 						"localhost"
 					],
 					"port": "1323",
 					"path": [
 						"calculator",
-						"+"
+						"symbol"
+					],
+					"query": [
+						{
+							"key": "operation",
+							"value": "%2B"
+						}
 					]
 				}
 			},
@@ -305,25 +351,58 @@
 			"name": "Fileprocessor",
 			"request": {
 				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgyNTkxMjQsImlhdCI6MTcxODE3MjcyNCwidXNlcm5hbWUiOiJhbGlpIn0.9MQyKZKuj56rsa9Db_dPuS18VL1IMfP6kRAVE4KRSrA",
+						"type": "text"
 					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/root1/Documents/textfile.txt"
+						},
+						{
+							"key": "goroutines",
+							"value": "2",
+							"type": "text"
+						}
+					]
 				},
 				"url": {
-					"raw": "localhost:1323//textfileprocessor",
+					"raw": "localhost:1323/textfileprocessor",
 					"host": [
 						"localhost"
 					],
 					"port": "1323",
 					"path": [
-						"",
 						"textfileprocessor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tablecreater",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "localhost:1323/migrate",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"migrate"
 					]
 				}
 			},
