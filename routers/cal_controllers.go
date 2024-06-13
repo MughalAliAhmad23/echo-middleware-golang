@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 	"sync"
 
@@ -62,7 +63,7 @@ func TextfilePro(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
+	fmt.Println(goVal)
 	var wg sync.WaitGroup
 
 	defer filereader.Timer("main")()
@@ -87,12 +88,14 @@ func TextfilePro(c echo.Context) error {
 	filesize := filedata.Size()
 
 	chunksize := filesize / int64(goIntVal)
+	fmt.Println("chunk size", chunksize)
 
 	reader := bufio.NewReader(osfile)
 
 	chanResult := make(chan models.Filestats, goIntVal)
 
 	for i := 0; i < goIntVal; i++ {
+		fmt.Println("routine is ", runtime.NumCPU())
 		chunk := make([]byte, chunksize)
 		_, err := reader.Read(chunk)
 		if err != nil {
@@ -150,6 +153,20 @@ func TextfilePro(c echo.Context) error {
 
 	fmt.Println("main exists")
 	return c.JSON(http.StatusCreated, resp)
+
+}
+
+func Getallstats(c echo.Context) error {
+	filestats, err := db.Readallfilestats()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	res := models.Resp{
+		Data:    filestats,
+		Message: "Successfully retrieves the result",
+		Status:  http.StatusOK,
+	}
+	return c.JSON(http.StatusCreated, res)
 
 }
 

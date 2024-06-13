@@ -110,7 +110,22 @@ func Readall() ([]models.CalculatorDb, error) {
 	}
 	return calculations, nil
 }
-
+func Readallfilestats() ([]models.FilestatsDB, error) {
+	rows, err := dbConn.Query("SELECT * FROM filestats")
+	if err != nil {
+		return nil, err
+	}
+	var filestatsdb []models.FilestatsDB
+	for rows.Next() {
+		var filestats models.FilestatsDB
+		err := rows.Scan(&filestats.Id, &filestats.Totallines, &filestats.Totalwords, &filestats.Totalspaces, &filestats.Totalvowels, &filestats.Totalpunctuation, &filestats.Timestamp)
+		if err != nil {
+			return nil, err
+		}
+		filestatsdb = append(filestatsdb, filestats)
+	}
+	return filestatsdb, nil
+}
 func Readbyid(id int) (*models.CalculatorDb, error) {
 	var cal models.CalculatorDb
 
