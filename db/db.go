@@ -28,6 +28,18 @@ func UserInsert(user models.UserDb) (*models.UserDb, error) {
 	return &user, nil
 }
 
+func Fileinsert(stats models.FilestatsDB) (*models.FilestatsDB, error) {
+	query := "INSERT INTO filestats (totalline,totalwords,totalspaces,totalvowels,totalpunctuations) VALUES ($1,$2,$3,$4,$5) RETURNING id, timestamp"
+
+	err := dbConn.QueryRow(query, stats.Totallines, stats.Totalwords, stats.Totalspaces, stats.Totalvowels, stats.Totalpunctuation).Scan(&stats.Id, &stats.Timestamp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &stats, nil
+}
+
 func Userlogin(user models.Userlogin) (bool, error) {
 	query := "SELECT 'exists' AS result FROM UserRecord WHERE username = $1 AND userpassword = $2 UNION SELECT 'not exists' AS result LIMIT 1"
 

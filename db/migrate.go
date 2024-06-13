@@ -35,5 +35,20 @@ func Migration(c echo.Context) error {
 		log.Fatalf("Failed to create Calculator table: %v", err)
 	}
 
+	fileStats := `CREATE TABLE IF NOT EXISTS filestats(
+	id serial PRIMARY KEY,
+	totalline BIGINT,
+	totalwords BIGINT,
+	totalspaces BIGINT,
+	totalvowels BIGINT,
+	totalpunctuations BIGINT,
+	timestamp timestamp default current_timestamp
+	);`
+
+	_, err = dbConn.Exec(fileStats)
+	if err != nil {
+		log.Fatalf("Failed to create filestats table: %v", err)
+	}
+
 	return nil
 }

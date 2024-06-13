@@ -23,4 +23,5 @@ func Routes(e *echo.Echo) {
 	e.PUT("/calculator/:id", m.SomeMiddleware(Update, m.SomeErrorHandler))
 	e.GET("/calculator/symbol", m.SomeMiddleware(Getbysymbol, m.SomeErrorHandler))
 	e.POST("/textfileprocessor", m.SomeMiddleware(TextfilePro, m.SomeErrorHandler))
+	// e.GET("/textfileststats/all", Getallstats)
 }

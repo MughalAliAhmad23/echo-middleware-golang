@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Resp struct {
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
@@ -47,3 +49,29 @@ type Userlogin struct {
 	Username     string `json:"Username"`
 	Userpassword string `json:"Userpassword"`
 }
+
+type FilestatsDB struct {
+	Id               int       `db:"id"`
+	Totallines       int       `db:"totallines"`
+	Totalwords       int       `timerdb:"totalwords"`
+	Totalspaces      int       `db:"totalspaces"`
+	Totalvowels      int       `db:"totalvowels"`
+	Totalpunctuation int       `db:"totalpunctuation"`
+	Timestamp        time.Time `db:"timestamp"`
+}
+type Filestats struct {
+	Id               int       `json:"id"`
+	Totallines       int       `json:"totallines"`
+	Totalwords       int       `json:"totalwords"`
+	Totalspaces      int       `json:"totalspaces"`
+	Totalvowels      int       `json:"totalvowels"`
+	Totalpunctuation int       `json:"totalpunctuation"`
+	Timestamp        time.Time `json:"timestamp"`
+}
+
+// type Filestatistics struct {
+// 	Linecount        int
+// 	Wordscount       int
+// 	Vowelscount      int
+// 	Punctuationcount int
+// }

@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"bufio"
 	"calculator/db"
 	"calculator/filereader"
 	"calculator/models"
@@ -8,8 +9,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"sync"
 
@@ -52,7 +54,14 @@ func Add(c echo.Context) error {
 
 func TextfilePro(c echo.Context) error {
 
-	resp := make(chan string, 4)
+	goVal := c.FormValue("goroutines")
+	if goVal == "" {
+		return c.JSON(http.StatusBadRequest, "value of goroutines is empty!")
+	}
+	goIntVal, err := strconv.Atoi(goVal)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
 	var wg sync.WaitGroup
 
@@ -67,69 +76,81 @@ func TextfilePro(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	defer src.Close()
-	filedata, err := ioutil.ReadAll(src)
+
+	osfile := src.(*os.File)
+
+	filedata, err := osfile.Stat()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		log.Fatal(err)
 	}
 
-	goVal := c.FormValue("goroutines")
-	if goVal == "" {
-		return c.JSON(http.StatusBadRequest, "value of goroutines is empty!")
-	}
-	goIntVal, err := strconv.Atoi(goVal)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
+	filesize := filedata.Size()
 
-	fmt.Println("length of characters in a file :", len(string(filedata)))
+	chunksize := filesize / int64(goIntVal)
 
-	totallines := 0
+	reader := bufio.NewReader(osfile)
 
-	totalslices := goIntVal
+	chanResult := make(chan models.Filestats, goIntVal)
 
-	for i := 0; i < len(filedata); i++ {
-		if filedata[i] == '.' {
-			totallines++
+	for i := 0; i < goIntVal; i++ {
+		chunk := make([]byte, chunksize)
+		_, err := reader.Read(chunk)
+		if err != nil {
+			log.Fatal(err)
 		}
+		wg.Add(1)
+		go filereader.FileProcessor(chunk, chanResult, &wg)
 	}
-
-	fmt.Println("Total number of lines:", totallines)
-
-	linesEachSlice := totallines / totalslices
-
-	chunksHolder := make([]string, goIntVal)
-
-	s := make([]string, goIntVal)
-
-	for i := 0; i < totalslices; i++ {
-		if i < totalslices-1 {
-			s[i] = string(filedata)[i*linesEachSlice : i*linesEachSlice+linesEachSlice]
-			chunksHolder[i] = s[i]
-		} else {
-			s[i] = string(filedata)[i*linesEachSlice:]
-			chunksHolder[i] = s[i]
-		}
-	}
-
-	wg.Add(1)
-	go filereader.Wordfrequeny(string(filedata), &wg, resp, chunksHolder)
-	wg.Add(1)
-	go filereader.SpaceCounter(string(filedata), &wg, resp, chunksHolder)
-	wg.Add(1)
-	go filereader.Wordcounter(string(filedata), &wg, resp, chunksHolder)
-	wg.Add(1)
-	go filereader.VowelsCounter(string(filedata), &wg, resp, chunksHolder)
-
 	wg.Wait()
-	close(resp)
-	// for val := range resp {
-	// 	fmt.Println(val)
-	// }
-	fmt.Println("iteratig over channel")
-	//fmt.Println(len(resp))
+
+	totalResut := models.FilestatsDB{}
+
+	for i := 0; i < goIntVal; i++ {
+		result := <-chanResult
+		totalResut.Totallines += result.Totallines
+		totalResut.Totalwords += result.Totalwords
+		totalResut.Totalvowels += result.Totalvowels
+		totalResut.Totalpunctuation += result.Totalpunctuation
+	}
+
+	res, err := db.Fileinsert(models.FilestatsDB{
+		Totallines:       totalResut.Totallines,
+		Totalwords:       totalResut.Totalwords,
+		Totalspaces:      totalResut.Totalwords - 1,
+		Totalvowels:      totalResut.Totalvowels,
+		Totalpunctuation: totalResut.Totalpunctuation,
+	})
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	output := models.Filestats{
+		Id:               res.Id,
+		Totallines:       res.Totallines,
+		Totalwords:       res.Totalwords,
+		Totalspaces:      res.Totalspaces,
+		Totalvowels:      res.Totalvowels,
+		Totalpunctuation: res.Totalpunctuation,
+		Timestamp:        res.Timestamp,
+	}
+
+	resp := models.Resp{
+		Data:    output,
+		Message: "File result Successfully Added",
+		Status:  http.StatusOK,
+	}
+
+	fmt.Println("Id :", res.Id)
+	fmt.Println("Total lines :", res.Totallines)
+	fmt.Println("Total words :", res.Totalwords)
+	fmt.Println("Total spaces :", res.Totalspaces)
+	fmt.Println("Total vowels :", res.Totalvowels)
+	fmt.Println("Total Punctuation :", res.Totalpunctuation)
+	fmt.Println("Timestamp of a file :", res.Timestamp)
 
 	fmt.Println("main exists")
-	return nil
+	return c.JSON(http.StatusCreated, resp)
+
 }
 
 func Crediantials(c echo.Context) error {
