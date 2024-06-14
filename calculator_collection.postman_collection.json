@@ -354,7 +354,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgyNTkxMjQsImlhdCI6MTcxODE3MjcyNCwidXNlcm5hbWUiOiJhbGlpIn0.9MQyKZKuj56rsa9Db_dPuS18VL1IMfP6kRAVE4KRSrA",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTgzNTkwNTgsImlhdCI6MTcxODI3MjY1OCwidXNlcm5hbWUiOiJBTEkifQ.4IGz78Q31SeCP6PKbJy0mg0tFruEpJNqPGgOdqMRy-c",
 						"type": "text"
 					}
 				],
@@ -364,11 +364,11 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/home/root1/Documents/textfile.txt"
+							"src": "/home/root1/gotextfile.txt"
 						},
 						{
 							"key": "goroutines",
-							"value": "2",
+							"value": "65",
 							"type": "text"
 						}
 					]
@@ -403,6 +403,29 @@
 					"port": "1323",
 					"path": [
 						"migrate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getfilestats",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "localhost:1323/textfilestats/all",
+					"host": [
+						"localhost"
+					],
+					"port": "1323",
+					"path": [
+						"textfilestats",
+						"all"
 					]
 				}
 			},
