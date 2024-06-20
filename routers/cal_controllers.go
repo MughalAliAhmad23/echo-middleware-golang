@@ -16,9 +16,21 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
+// Add godoc
+// @Summary Add two numbers
+// @Description Adds two numbers and stores the result in the database
+// @Tags calculator
+// @Accept  json
+// @Produce  json
+// @Param   input  body models.CalculatorReq  true  "Input data: No1 and No2 should nt be zero"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully calculated addition"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/add [post]
 func Add(c echo.Context) error {
 
 	var input models.CalculatorReq
@@ -258,6 +270,18 @@ func Login(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Substract godoc
+// @Summary Substract two numbers
+// @Description Substract two numbers and stores the result in the database
+// @Tags calculator
+// @Accept  json
+// @Produce  json
+// @Param   input  body     models.CalculatorReq  true  "Input data: No1 and No2 should not be zero"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully calculated substraction"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/substract [post]
 func Substract(c echo.Context) error {
 	var input models.CalculatorReq
 
@@ -294,6 +318,18 @@ func Substract(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Multiply godoc
+// @Summary Multiply two numbers
+// @Description Multiplys two numbers and stores the result in the database
+// @Tags calculator
+// @Accept  json
+// @Produce  json
+// @Param   input  body models.CalculatorReq  true  "Input data: No1 and No2 should nt be zero"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully calculated multiplication"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/multiply [post]
 func Multiply(c echo.Context) error {
 
 	var input models.CalculatorReq
@@ -330,7 +366,19 @@ func Multiply(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
-func Division(c echo.Context) error {
+// Divide godoc
+// @Summary Divide two numbers
+// @Description Divides two numbers and stores the result in the database
+// @Tags calculator
+// @Accept  json
+// @Produce  json
+// @Param   input  body  models.CalculatorReq  true  "Input data: No1 and No2 should not be zero"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully calculated division"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/divide [post]
+func Divide(c echo.Context) error {
 	var input models.CalculatorReq
 
 	err := c.Bind(&input)
@@ -366,6 +414,15 @@ func Division(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Getall  godoc
+// @Summary Retrives all record
+// @Description Retrives all records from calculator table in the database
+// @Tags calculator
+// @Produce json
+// @security BearerAuth
+// @success 200 {array} models.Resp "Successfully Retrieved all data"
+// @Failure 400 {object} string "Invalid input"
+// @Router /calculator [Get]
 func Getall(c echo.Context) error {
 	calculations, err := db.Readall()
 
@@ -382,6 +439,17 @@ func Getall(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Getbyid godoc
+// @Summary Retrives recored on specific id
+// @Description Retrives record on specific id from calculator table in the database
+// @Tags calculator
+// @Produce json
+// @Param id path string true "id cannot be empty"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully retrieved id data"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/{id} [Get]
 func Getbyid(c echo.Context) error {
 	request_id := c.Param("id")
 
@@ -414,6 +482,17 @@ func Getbyid(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Getbysymbol godoc
+// @Summary Retrives all recored on specific operation
+// @Description Retrives all record on specific operation from calculator table in the database
+// @Tags calculator
+// @Produce json
+// @Param operation path string true "operation can be in decodes foam"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully retrieved symbol data"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/symbol{operation} [Get]
 func Getbysymbol(c echo.Context) error {
 
 	request_symbol := c.QueryParam("operation")
@@ -438,6 +517,17 @@ func Getbysymbol(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Delete godoc
+// @Summary Delete the recored on specific id
+// @Description Delete the record on specific id from calculator table in the database
+// @Tags calculator
+// @Produce json
+// @Param id path string true "id cannot be empty"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully deleted"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/{id} [Delete]
 func Delete(c echo.Context) error {
 	request_id := c.Param("id")
 
@@ -464,6 +554,19 @@ func Delete(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Update godoc
+// @Summary Update the recored on specific id
+// @Description Update the record on specific id from calculator table in the database
+// @Tags calculator
+// @Accept json
+// @Produce json
+// @Param input body models.CalculatorReq true "Input data: No2 cannot be zero"
+// @Param id path string true "id cannot be empty"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "Successfully deleted"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Internal server error"
+// @Router /calculator/{id} [Put]
 func Update(c echo.Context) error {
 	var cal models.CalculatorReq
 

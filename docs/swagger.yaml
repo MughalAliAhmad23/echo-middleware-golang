@@ -1,0 +1,302 @@
+definitions:
+  models.CalculatorReq:
+    properties:
+      no1:
+        type: number
+      no2:
+        type: number
+    type: object
+  models.Resp:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:1323
+info:
+  contact: {}
+  description: This is sample calculator & user server
+  title: Swagger Example Api
+  version: "1.0"
+paths:
+  /calculator:
+    get:
+      description: Retrives all records from calculator table in the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Retrieved all data
+          schema:
+            items:
+              $ref: '#/definitions/models.Resp'
+            type: array
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrives all record
+      tags:
+      - calculator
+  /calculator/{id}:
+    delete:
+      description: Delete the record on specific id from calculator table in the database
+      parameters:
+      - description: id cannot be empty
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete the recored on specific id
+      tags:
+      - calculator
+    get:
+      description: Retrives record on specific id from calculator table in the database
+      parameters:
+      - description: id cannot be empty
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved id data
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrives recored on specific id
+      tags:
+      - calculator
+    put:
+      consumes:
+      - application/json
+      description: Update the record on specific id from calculator table in the database
+      parameters:
+      - description: 'Input data: No2 cannot be zero'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CalculatorReq'
+      - description: id cannot be empty
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update the recored on specific id
+      tags:
+      - calculator
+  /calculator/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds two numbers and stores the result in the database
+      parameters:
+      - description: 'Input data: No1 and No2 should nt be zero'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CalculatorReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully calculated addition
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Add two numbers
+      tags:
+      - calculator
+  /calculator/divide:
+    post:
+      consumes:
+      - application/json
+      description: Divides two numbers and stores the result in the database
+      parameters:
+      - description: 'Input data: No1 and No2 should not be zero'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CalculatorReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully calculated division
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Divide two numbers
+      tags:
+      - calculator
+  /calculator/multiply:
+    post:
+      consumes:
+      - application/json
+      description: Multiplys two numbers and stores the result in the database
+      parameters:
+      - description: 'Input data: No1 and No2 should nt be zero'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CalculatorReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully calculated multiplication
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Multiply two numbers
+      tags:
+      - calculator
+  /calculator/substract:
+    post:
+      consumes:
+      - application/json
+      description: Substract two numbers and stores the result in the database
+      parameters:
+      - description: 'Input data: No1 and No2 should not be zero'
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CalculatorReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully calculated substraction
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Substract two numbers
+      tags:
+      - calculator
+  /calculator/symbol{operation}:
+    get:
+      description: Retrives all record on specific operation from calculator table
+        in the database
+      parameters:
+      - description: operation can be in decodes foam
+        in: path
+        name: operation
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved symbol data
+          schema:
+            $ref: '#/definitions/models.Resp'
+        "400":
+          description: Invalid data
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Retrives all recored on specific operation
+      tags:
+      - calculator
+securityDefinitions:
+  BearerAuth:
+    description: Enter your bearer token in the format **Bearer &lt;token&gt;**
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -3,7 +3,7 @@ package db
 import (
 	"log"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func Migration(c echo.Context) error {
