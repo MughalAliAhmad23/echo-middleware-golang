@@ -12,7 +12,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"runtime"
 	"strconv"
 	"sync"
 
@@ -37,6 +36,7 @@ func Add(c echo.Context) error {
 
 	err := c.Bind(&input)
 	if err != nil {
+		fmt.Println("i am in bind section")
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
@@ -47,6 +47,7 @@ func Add(c echo.Context) error {
 		Result:    result,
 	})
 	if err != nil {
+		fmt.Println("i am in insert section")
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	output := models.CalculatorResp{
@@ -61,10 +62,24 @@ func Add(c echo.Context) error {
 		Message: "Successfully calculted addition",
 		Status:  http.StatusOK,
 	}
+	fmt.Println("i am about to leave the add function")
 	return c.JSON(http.StatusCreated, resp)
 
 }
 
+// Textfilepro godooc
+// @Summary Count the textfile stats
+// @Description Get the text filr from the user and count the filestats like lines,spaces,words,vowels,punctuation & timestamps
+// @Tags Textfile
+// @Accept multipart/form-data
+// @Produce json
+// @Param goroutines formData string true "Number of goroutines"
+// @Param file formData file true "Text file to process"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "File result Successfully Added"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /textfileprocessor [post]
 func TextfilePro(c echo.Context) error {
 
 	goVal := c.FormValue("goroutines")
@@ -107,7 +122,7 @@ func TextfilePro(c echo.Context) error {
 	chanResult := make(chan models.Filestats, goIntVal)
 
 	for i := 0; i < goIntVal; i++ {
-		fmt.Println("routine is ", runtime.NumCPU())
+		//fmt.Println("routine is ", goIntVal)
 		chunk := make([]byte, chunksize)
 		_, err := reader.Read(chunk)
 		if err != nil {
@@ -168,6 +183,15 @@ func TextfilePro(c echo.Context) error {
 
 }
 
+// Getallstats godoc
+// @Summary Get all stats of a processed file
+// @Description Get all the stats of a file stored in database like timestamp,lines,words,spaces,vowels
+// @tags Textfile
+// @Produce json
+// @security BearerAuth
+// @success 200 {array} models.Resp "Successfully Retrieved all data"
+// @Failure 400 {object} string "Invalid input"
+// @Router /textfilestats/all [Get]
 func Getallstats(c echo.Context) error {
 	filestats, err := db.Readallfilestats()
 	if err != nil {
@@ -182,6 +206,17 @@ func Getallstats(c echo.Context) error {
 
 }
 
+// Crediantials godoc
+// @Summary User Signup
+// @Description Signup the user and stores the stats of a user in a database
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param input body models.User true "username,userpassword & useremail cannot be empty"
+// @Success 200 {object} models.Resp "User verified successfully"
+// @Failure 400 {object} models.Resp "User already exists"
+// @Failure 500 {object} string "Invalid input"
+// @Router /user [Post]
 func Crediantials(c echo.Context) error {
 	var input models.User
 
@@ -231,6 +266,17 @@ func Crediantials(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
+// Login godoc
+// @Summary User Login
+// @Description Login user and generates the Authorixation token
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param input body models.Userlogin true "username & userpassword cannot be empty"
+// @Success 200 {object} models.Resp "completed"
+// @Failure 400 {object} models.Resp " "User does not exists""
+// @Failure 500 {object} string "Invalid input"
+// @Router /user/login [Post]
 func Login(c echo.Context) error {
 	var input models.Userlogin
 

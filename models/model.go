@@ -1,11 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Resp struct {
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 	Status  int         `json:"status"`
+	//ErrError string `json:"ErrError"`
 }
 
 type CalculatorReq struct {

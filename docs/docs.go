@@ -444,6 +444,188 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/textfileprocessor": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get the text filr from the user and count the filestats like lines,spaces,words,vowels,punctuation \u0026 timestamps",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Textfile"
+                ],
+                "summary": "Count the textfile stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Number of goroutines",
+                        "name": "goroutines",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Text file to process",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File result Successfully Added",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resp"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/textfilestats/all": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all the stats of a file stored in database like timestamp,lines,words,spaces,vowels",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Textfile"
+                ],
+                "summary": "Get all stats of a processed file",
+                "responses": {
+                    "200": {
+                        "description": "Successfully Retrieved all data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Resp"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "post": {
+                "description": "Signup the user and stores the stats of a user in a database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "User Signup",
+                "parameters": [
+                    {
+                        "description": "username,userpassword \u0026 useremail cannot be empty",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User verified successfully",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resp"
+                        }
+                    },
+                    "400": {
+                        "description": "User already exists",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resp"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "description": "Login user and generates the Authorixation token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "User Login",
+                "parameters": [
+                    {
+                        "description": "username \u0026 userpassword cannot be empty",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Userlogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "completed",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resp"
+                        }
+                    },
+                    "400": {
+                        "description": " \"User does not exists",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resp"
+                        }
+                    },
+                    "500": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -467,6 +649,31 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "Useremail": {
+                    "type": "string"
+                },
+                "Username": {
+                    "type": "string"
+                },
+                "Userpassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Userlogin": {
+            "type": "object",
+            "properties": {
+                "Username": {
+                    "type": "string"
+                },
+                "Userpassword": {
+                    "type": "string"
                 }
             }
         }
