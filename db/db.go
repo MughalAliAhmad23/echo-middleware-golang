@@ -68,7 +68,7 @@ func Userlogin(user models.Userlogin) (bool, error) {
 
 func Isuserexists(user models.User) (bool, error) {
 	isuser := false
-	query := "SELECT 'exists' AS result FROM UserRecord WHERE username = ? UNION SELECT 'notexists' AS resut LIMIT 1"
+	query := "SELECT CASE  WHEN EXISTS (SELECT 1 FROM UserRecord WHERE username = $1) THEN 'exists' ELSE 'notexists' END AS result"
 
 	rows, err := dbConn.Query(query, user.Username)
 	if err != nil {

@@ -10,11 +10,11 @@ import (
 var dbConn *sql.DB
 
 const (
-	host     = "localhost"
+	host     = "db"
 	port     = 5432
 	user     = "postgres"
 	password = "new_password"
-	dbname   = "aliahmaddb"
+	dbname   = "postgres"
 )
 
 func Connect() (*sql.DB, error) {

@@ -8,8 +8,6 @@ import (
 
 func Migration(c echo.Context) error {
 
-	defer dbConn.Close()
-
 	userRecord := `CREATE TABLE IF NOT EXISTS UserRecord(
 	id serial PRIMARY KEY,
 	username VARCHAR(20) NOT NULL,
