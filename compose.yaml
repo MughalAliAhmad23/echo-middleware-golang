@@ -1,5 +1,12 @@
-
 services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    environment:
+      SWAGGER_JSON: /swagger.yaml
+    volumes:
+      - ./docs/swagger.yaml:/swagger.yaml
   server:
     build:
       context: .
@@ -33,4 +40,3 @@ volumes:
 # secrets:
 #   db-password:
 #     file: db/password.txt
-
