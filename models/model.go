@@ -72,6 +72,11 @@ type Filestats struct {
 	Timestamp        time.Time `json:"timestamp"`
 }
 
+type Message struct {
+	Username string `json:"username"`
+	Message  string `json:"message"`
+}
+
 // type Filestatistics struct {
 // 	Linecount        int
 // 	Wordscount       int

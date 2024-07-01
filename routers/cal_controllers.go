@@ -10,13 +10,26 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
 	"sync"
 
+	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
+
+var upgrade = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+var clients = make(map[*websocket.Conn]string)
+
+//var broadcast = make(chan models.Message)
 
 // Add godoc
 // @Summary Add two numbers
@@ -31,6 +44,9 @@ import (
 // @Failure 500 {object} string "Internal server error"
 // @Router /calculator/add [post]
 func Add(c echo.Context) error {
+
+	// request:= c.Request()
+	// responseWriter := c.
 
 	var input models.CalculatorReq
 
@@ -67,41 +83,54 @@ func Add(c echo.Context) error {
 
 }
 
-// Textfilepro godooc
-// @Summary Count the textfile stats
-// @Description Get the text filr from the user and count the filestats like lines,spaces,words,vowels,punctuation & timestamps
-// @Tags Textfile
-// @Accept multipart/form-data
-// @Produce json
-// @Param goroutines formData string true "Number of goroutines"
-// @Param file formData file true "Text file to process"
-// @security BearerAuth
-// @Success 200 {object} models.Resp "File result Successfully Added"
-// @Failure 400 {object} string "Invalid input"
-// @Failure 500 {object} string "Internal server error"
-// @Router /textfileprocessor [post]
-func TextfilePro(c echo.Context) error {
+func Handlecnnections(c echo.Context) error {
 
-	goVal := c.FormValue("goroutines")
-	if goVal == "" {
-		return c.JSON(http.StatusBadRequest, "value of goroutines is empty!")
-	}
-	goIntVal, err := strconv.Atoi(goVal)
+	req := c.Request()
+	headers := req.Header
+
+	apitoken := headers.Get("Authorization")
+
+	claims, _ := ExtractClaims(apitoken)
+	fmt.Println(claims)
+	name := fmt.Sprintf("%s", claims["username"])
+	fmt.Println(name)
+
+	conn, err := upgrade.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		fmt.Println("connection err:", err)
+		return err
 	}
-	fmt.Println(goVal)
+	defer conn.Close()
+
+	clients[conn] = name
+	// we know ws send continously data and recive so for that we make a for loop...for continously reading and writing
+	for {
+		var msg models.Message
+		err := conn.ReadJSON(&msg)
+		if err != nil {
+			fmt.Println("error in reading message", err)
+			delete(clients, conn)
+			return err
+		}
+		//broadcast <- msg
+	}
+
+}
+func Processesfile(gorountines int, file multipart.FileHeader, name string) {
+	//valueExists := false
 	var wg sync.WaitGroup
-
-	defer filereader.Timer("main")()
-
-	file, err := c.FormFile("file")
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
 	src, err := file.Open()
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
 	}
 	defer src.Close()
 
@@ -114,14 +143,14 @@ func TextfilePro(c echo.Context) error {
 
 	filesize := filedata.Size()
 
-	chunksize := filesize / int64(goIntVal)
+	chunksize := filesize / int64(gorountines)
 	fmt.Println("chunk size", chunksize)
 
 	reader := bufio.NewReader(osfile)
 
-	chanResult := make(chan models.Filestats, goIntVal)
+	chanResult := make(chan models.Filestats, gorountines)
 
-	for i := 0; i < goIntVal; i++ {
+	for i := 0; i < gorountines; i++ {
 		//fmt.Println("routine is ", goIntVal)
 		chunk := make([]byte, chunksize)
 		_, err := reader.Read(chunk)
@@ -135,7 +164,7 @@ func TextfilePro(c echo.Context) error {
 
 	totalResut := models.FilestatsDB{}
 
-	for i := 0; i < goIntVal; i++ {
+	for i := 0; i < gorountines; i++ {
 		result := <-chanResult
 		totalResut.Totallines += result.Totallines
 		totalResut.Totalwords += result.Totalwords
@@ -151,7 +180,17 @@ func TextfilePro(c echo.Context) error {
 		Totalpunctuation: totalResut.Totalpunctuation,
 	})
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
+		//return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	output := models.Filestats{
@@ -179,6 +218,68 @@ func TextfilePro(c echo.Context) error {
 	fmt.Println("Timestamp of a file :", res.Timestamp)
 
 	fmt.Println("main exists")
+
+	for client, username := range clients {
+		if username == name {
+			err := client.WriteJSON(resp)
+			if err != nil {
+				fmt.Println("err in client message", err)
+				client.Close()
+				delete(clients, client)
+			}
+		}
+	}
+	//return c.JSON(http.StatusCreated, resp)
+}
+
+// Textfilepro godooc
+// @Summary Count the textfile stats
+// @Description Get the text filr from the user and count the filestats like lines,spaces,words,vowels,punctuation & timestamps
+// @Tags Textfile
+// @Accept multipart/form-data
+// @Produce json
+// @Param goroutines formData string true "Number of goroutines"
+// @Param file formData file true "Text file to process"
+// @security BearerAuth
+// @Success 200 {object} models.Resp "File result Successfully Added"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /textfileprocessor [post]
+func TextfilePro(c echo.Context) error {
+
+	req := c.Request()
+	headers := req.Header
+
+	apitoken := headers.Get("Authorization")
+
+	claims, _ := ExtractClaims(apitoken)
+	fmt.Println(claims)
+	name := fmt.Sprintf("%s", claims["username"])
+	fmt.Println(name)
+
+	goVal := c.FormValue("goroutines")
+	if goVal == "" {
+		return c.JSON(http.StatusBadRequest, "value of goroutines is empty!")
+	}
+	goIntVal, err := strconv.Atoi(goVal)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	fmt.Println(goVal)
+	//var wg sync.WaitGroup
+
+	defer filereader.Timer("main")()
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	go Processesfile(goIntVal, *file, name)
+	resp := models.Resp{
+		Data:    nil,
+		Message: "File successfully uploaded!",
+		Status:  http.StatusOK,
+	}
 	return c.JSON(http.StatusCreated, resp)
 
 }
@@ -204,6 +305,26 @@ func Getallstats(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, res)
 
+}
+
+func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
+	hmacSecretString := myjwt.SecretKey
+	hmacSecret := []byte(hmacSecretString)
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// check token signing method etc
+		return hmacSecret, nil
+	})
+
+	if err != nil {
+		return nil, false
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, true
+	} else {
+		log.Printf("Invalid JWT Token")
+		return nil, false
+	}
 }
 
 // Crediantials godoc

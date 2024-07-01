@@ -10,6 +10,7 @@ import (
 
 func Routes(e *echo.Echo) {
 	m := mymiddleware.NewMiddleware()
+	e.GET("/ws", m.SomeMiddleware(Handlecnnections, m.SomeErrorHandler))
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.POST("/migrate", db.Migration)
 	e.POST("/user", Crediantials)

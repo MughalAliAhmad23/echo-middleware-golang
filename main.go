@@ -24,8 +24,18 @@ func main() {
 		AllowOrigins: []string{"*"},
 		//AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
+	// err := http.ListenAndServe(":8080", nil)
 
+	// if err != nil {
+	// 	panic("error starting server" + err.Error())
+	// }
 	routers.Routes(e)
 	e.Logger.Fatal(e.Start(":1323"))
+
+	// err := http.ListenAndServe(":8080", nil)
+	// if err != nil {
+	// 	panic("error starting server" + err.Error())
+	// // }
+
 	//database k koi b kam krna hai to db wala structure use ho ga chahay data dalna ho ya data nikalna ho or phir agr user to user ko show krna ha to same sturcture use ho ga without db wala or wo structure response k ek general sturcture ma jay ga or wo user ko jay ga...
 }
