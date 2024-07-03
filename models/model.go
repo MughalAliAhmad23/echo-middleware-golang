@@ -8,7 +8,6 @@ type Resp struct {
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 	Status  int         `json:"status"`
-	//ErrError string `json:"ErrError"`
 }
 
 type CalculatorReq struct {
@@ -72,14 +71,8 @@ type Filestats struct {
 	Timestamp        time.Time `json:"timestamp"`
 }
 
+// This struct is for send message to user if want...use channel of that type to implement...
 type Message struct {
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }
-
-// type Filestatistics struct {
-// 	Linecount        int
-// 	Wordscount       int
-// 	Vowelscount      int
-// 	Punctuationcount int
-// }

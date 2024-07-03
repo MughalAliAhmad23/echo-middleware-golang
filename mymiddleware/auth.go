@@ -28,6 +28,7 @@ func (m *middleware) SetError(code int, message string) {
 }
 
 func (m *middleware) SomeMiddleware(next, stop echo.HandlerFunc) echo.HandlerFunc {
+
 	return func(c echo.Context) error {
 
 		req := c.Request()
@@ -41,6 +42,7 @@ func (m *middleware) SomeMiddleware(next, stop echo.HandlerFunc) echo.HandlerFun
 			m.SetError(http.StatusBadRequest, err.Error())
 			return stop(c)
 		}
+
 		return next(c)
 	}
 }

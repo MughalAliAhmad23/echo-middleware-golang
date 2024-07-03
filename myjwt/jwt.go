@@ -9,6 +9,7 @@ import (
 var SecretKey = []byte("Secret-key")
 
 func GenerateToken(username string) (string, error) {
+
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -20,5 +21,6 @@ func GenerateToken(username string) (string, error) {
 	if err != nil {
 		return "", nil
 	}
+
 	return tokenstring, nil
 }

@@ -9,6 +9,7 @@ import (
 
 var dbConn *sql.DB
 
+// To connect database with swagger replace localhost with db...
 const (
 	host     = "localhost"
 	port     = 5432
@@ -18,8 +19,11 @@ const (
 )
 
 func Connect() (*sql.DB, error) {
+
 	var err error
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
 	dbConn, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		fmt.Println("Error connecting to database", err)
@@ -29,5 +33,6 @@ func Connect() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return dbConn, nil
 }
