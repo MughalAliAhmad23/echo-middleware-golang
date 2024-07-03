@@ -1,7 +1,7 @@
 console.log("js loading");
 document.addEventListener('DOMContentLoaded', () => {
     console.log("loaded");
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk5ODE2NTUsImlhdCI6MTcxOTg5NTI1NSwidXNlcm5hbWUiOiJNdWhhbW1hZGZ1cnFhbiJ9.fSdBs0njftnNnXif8VKgskrE6jQKtPlQxTa8MutSWHE'
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjAwNjk2ODcsImlhdCI6MTcxOTk4MzI4NywidXNlcm5hbWUiOiJNdWhhbW1hZEFobWFkIn0.kcBEiux_R2Mf2yNGGteaxhBsRjz3EwVBE1JnOankEbQ'
     const socket = new WebSocket(`ws://localhost:1323/ws?token=${token}`);
 
     socket.onopen = function (event) {
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             headers: {
                 // Add headers as needed (e.g., Authorization for JWT)
-                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk5ODE2NTUsImlhdCI6MTcxOTg5NTI1NSwidXNlcm5hbWUiOiJNdWhhbW1hZGZ1cnFhbiJ9.fSdBs0njftnNnXif8VKgskrE6jQKtPlQxTa8MutSWHE'
+                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjAwNjk2ODcsImlhdCI6MTcxOTk4MzI4NywidXNlcm5hbWUiOiJNdWhhbW1hZEFobWFkIn0.kcBEiux_R2Mf2yNGGteaxhBsRjz3EwVBE1JnOankEbQ'
             },
             body: formData
         })

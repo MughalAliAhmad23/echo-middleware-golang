@@ -132,79 +132,87 @@ func Handlecnnections(c echo.Context) error {
 
 }
 func Processesfile(gorountines int, file multipart.FileHeader, name string) {
+	var currentUser *websocket.Conn
+	for client, userName := range clients {
+		if userName == name {
+			currentUser = client
+			//	fmt.Println("inside currentclient loop currentclient is:", currentUser)
+		}
+	}
+	// fmt.Println("current user is ", currentUser)
 	//valueExists := false
 	var wg sync.WaitGroup
 	src, err := file.Open()
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
 	}
+	// 	}
+	// }
 	defer src.Close()
 
 	tempfile, err := os.CreateTemp("", "temp-*")
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
 	}
+	// 	}
+	// }
 	defer tempfile.Close()
 
 	_, err = io.Copy(tempfile, src)
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
 	}
+	// 	}
+	// }
 
 	_, err = tempfile.Seek(0, 0)
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
 	}
+	// 	}
+	// }
 
 	filedata, err := tempfile.Stat()
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
 	}
+	// 	}
+	// }
 
 	// osfile := src.(*os.File)
 
@@ -252,18 +260,18 @@ func Processesfile(gorountines int, file multipart.FileHeader, name string) {
 		Totalpunctuation: totalResut.Totalpunctuation,
 	})
 	if err != nil {
-		for client, username := range clients {
-			if username == name {
-				err := client.WriteJSON(err.Error())
-				if err != nil {
-					fmt.Println("err in client message", err)
-					client.Close()
-					delete(clients, client)
-				}
-			}
+		// for client, username := range clients {
+		// 	if username == name {
+		err := currentUser.WriteJSON(err.Error())
+		if err != nil {
+			fmt.Println("err in client message", err)
+			currentUser.Close()
+			delete(clients, currentUser)
 		}
-		//return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	// 	}
+	// 	//return c.JSON(http.StatusInternalServerError, err.Error())
+	// }
 
 	output := models.Filestats{
 		Id:               res.Id,
