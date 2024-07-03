@@ -2,6 +2,7 @@ package routers
 
 import (
 	"bufio"
+	tokenvalidation "calculator/TokenValidation"
 	"calculator/db"
 	"calculator/filereader"
 	"calculator/models"
@@ -9,6 +10,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -85,15 +87,27 @@ func Add(c echo.Context) error {
 
 func Handlecnnections(c echo.Context) error {
 
-	req := c.Request()
-	headers := req.Header
+	// req := c.Request()
+	// headers := req.Header
 
-	apitoken := headers.Get("Authorization")
+	// apitoken := headers.Get("Authorization")
 
-	claims, _ := ExtractClaims(apitoken)
-	fmt.Println(claims)
-	name := fmt.Sprintf("%s", claims["username"])
-	fmt.Println(name)
+	// claims, _ := ExtractClaims(apitoken)
+	// fmt.Println(claims)
+	// name := fmt.Sprintf("%s", claims["username"])
+	// fmt.Println(name)
+
+	token := c.QueryParam("token")
+	name := ""
+	if token != "" {
+		err := tokenvalidation.Isvalid(token)
+		if err == nil {
+			claims, _ := ExtractClaims(token)
+			name = fmt.Sprintf("%s", claims["username"])
+		} else {
+			fmt.Println("Token provided is empty!")
+		}
+	}
 
 	conn, err := upgrade.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -103,6 +117,7 @@ func Handlecnnections(c echo.Context) error {
 	defer conn.Close()
 
 	clients[conn] = name
+
 	// we know ws send continously data and recive so for that we make a for loop...for continously reading and writing
 	for {
 		var msg models.Message
@@ -134,19 +149,76 @@ func Processesfile(gorountines int, file multipart.FileHeader, name string) {
 	}
 	defer src.Close()
 
-	osfile := src.(*os.File)
-
-	filedata, err := osfile.Stat()
+	tempfile, err := os.CreateTemp("", "temp-*")
 	if err != nil {
-		log.Fatal(err)
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
 	}
+	defer tempfile.Close()
+
+	_, err = io.Copy(tempfile, src)
+	if err != nil {
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
+	}
+
+	_, err = tempfile.Seek(0, 0)
+	if err != nil {
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
+	}
+
+	filedata, err := tempfile.Stat()
+	if err != nil {
+		for client, username := range clients {
+			if username == name {
+				err := client.WriteJSON(err.Error())
+				if err != nil {
+					fmt.Println("err in client message", err)
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
+	}
+
+	// osfile := src.(*os.File)
+
+	// filedata, err := osfile.Stat()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	filesize := filedata.Size()
 
 	chunksize := filesize / int64(gorountines)
 	fmt.Println("chunk size", chunksize)
 
-	reader := bufio.NewReader(osfile)
+	reader := bufio.NewReader(tempfile)
 
 	chanResult := make(chan models.Filestats, gorountines)
 

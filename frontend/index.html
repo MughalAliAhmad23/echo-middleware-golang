@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Details Table</title>
+
+</head>
+
+<body>
+
+
+    <input type="file" id="fileInput" accept=".txt"><br><br>
+    <label for="GoRoutines">GoRoutines:</label>
+    <input type="text" id="GoRoutines"><br><br>
+    <button id="upBtn">Upload File</button><br><br>
+
+    <table id="dataTable" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Total Lines</th>
+                <th>Total Words</th>
+                <th>Total Spaces</th>
+                <th>Total Vowels</th>
+                <th>Total Punctuations</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        
+        <tbody id="tableBody">
+            <!-- Table rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <!-- <script type="script" src="./index.js"></script> -->
+    <script src="./index.js"></script>
+</body>
+
+</html>

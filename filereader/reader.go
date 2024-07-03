@@ -228,3 +228,17 @@ func FileProcessor(chunk []byte, chanResult chan<- models.Filestats, wg *sync.Wa
 		Totalpunctuation: punctuationCount,
 	}
 }
+
+
+
+
+// curl --location 'localhost:1323/textfileprocessor' \
+// --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk5ODE2NTUsImlhdCI6MTcxOTg5NTI1NSwidXNlcm5hbWUiOiJNdWhhbW1hZGZ1cnFhbiJ9.fSdBs0njftnNnXif8VKgskrE6jQKtPlQxTa8MutSWHE' \
+// --form 'file=@"/home/root1/gotextfile.txt"' \
+// --form 'goroutines="1"'
+
+
+
+// curl 'http://localhost:1323/textfileprocessor' \
+  
+//   --data-raw $'------WebKitFormBoundaryy1BqE0oKwoBztzkR\r\nContent-Disposition: form-data; name="file"; filename="AliAhmadLetter.TXT"\r\nContent-Type: text/plain\r\n\r\n\r\n------WebKitFormBoundaryy1BqE0oKwoBztzkR\r\nContent-Disposition: form-data; name="goroutines"\r\n\r\n5\r\n------WebKitFormBoundaryy1BqE0oKwoBztzkR--\r\n'
