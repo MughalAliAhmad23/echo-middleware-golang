@@ -3,32 +3,37 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 var dbConn *sql.DB
 
-// To connect database with swagger replace localhost with db...
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "new_password"
-	dbname   = "postgres"
-)
-
 func Connect() (*sql.DB, error) {
 
 	var err error
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	err = godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName)
 
 	dbConn, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		fmt.Println("Error connecting to database", err)
 		return nil, err
 	}
+
 	err = dbConn.Ping()
 	if err != nil {
 		return nil, err

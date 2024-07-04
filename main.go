@@ -18,6 +18,7 @@ import (
 // @name Authorization
 // @description Enter your bearer token in the format **Bearer &lt;token&gt;**
 func main() {
+
 	e := echo.New()
 	db.Connect()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
