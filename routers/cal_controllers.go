@@ -878,3 +878,13 @@ func Update(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, resp)
 }
+
+func healthHandler(c echo.Context) error {
+	fmt.Println("i am here in health function!")
+	return c.NoContent(http.StatusOK)
+}
+
+func readinessHandler(c echo.Context) error {
+	fmt.Println("i am here in readiness function!")
+	return c.NoContent(http.StatusOK)
+}

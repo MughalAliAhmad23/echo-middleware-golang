@@ -1,28 +1,22 @@
+version: '3.8'
+
 services:
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    ports:
-      - "8080:8080"
-    environment:
-      SWAGGER_JSON: /swagger.yaml
-    volumes:
-      - ./docs/swagger.yaml:/swagger.yaml
-  server:
+  go-app:
     build:
       context: .
       target: final
+
     ports:
-      - 1323:1323
+    - "1323:1323"
 
     depends_on:
       db:
         condition: service_healthy
-  db:
+  db: 
     image: postgres
     restart: always
     user: postgres
-    # secrets:
-    #   - db-password
+
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -31,12 +25,9 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: ["CMD","pg_isready"]
       interval: 10s
-      timeout: 5s
+      timeout:  5s
       retries: 5
 volumes:
   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt

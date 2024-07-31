@@ -26,5 +26,7 @@ func Routes(e *echo.Echo) {
 	e.GET("/calculator/symbol", m.SomeMiddleware(Getbysymbol, m.SomeErrorHandler))
 	e.POST("/textfileprocessor", m.SomeMiddleware(TextfilePro, m.SomeErrorHandler))
 	e.GET("/textfilestats/all", m.SomeMiddleware(Getallstats, m.SomeErrorHandler))
+	e.GET("/health", healthHandler)
+	e.GET("/readiness", readinessHandler)
 
 }

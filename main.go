@@ -1,7 +1,6 @@
 package main
 
 import (
-	"calculator/db"
 	"calculator/routers"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -20,7 +19,7 @@ import (
 func main() {
 
 	e := echo.New()
-	db.Connect()
+	//db.Connect()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 	}))
