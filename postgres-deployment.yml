@@ -12,22 +12,30 @@ spec:
   template:
     metadata:
       labels:
-
         app: postgres
     spec:
       containers:
         - name: postgres-container
-          image: mughalaliahmad23/new_postgresql:latest
+          image: mughalaliahmad23/postgresnewimg:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
           env:
             - name: POSTGRES_USER
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
-              value: "new_password"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_DB
           livenessProbe:
             tcpSocket:
               port: 5432

@@ -28,5 +28,5 @@ func Routes(e *echo.Echo) {
 	e.GET("/textfilestats/all", m.SomeMiddleware(Getallstats, m.SomeErrorHandler))
 	e.GET("/health", healthHandler)
 	e.GET("/readiness", readinessHandler)
-
+	e.GET("/db-readiness", dbReadinessHandler)
 }

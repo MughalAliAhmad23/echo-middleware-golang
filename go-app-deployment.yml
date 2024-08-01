@@ -16,10 +16,36 @@ spec:
     spec:
       containers:
         - name: go-app-container
-          image: mughalaliahmad23/goimage:latest
+          image: mughalaliahmad23/gonewimg:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 1323
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: go-app-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: go-app-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_DB
           resources:
             requests:
               memory: "256Mi"

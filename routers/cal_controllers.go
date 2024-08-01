@@ -888,3 +888,26 @@ func readinessHandler(c echo.Context) error {
 	fmt.Println("i am here in readiness function!")
 	return c.NoContent(http.StatusOK)
 }
+
+func dbReadinessHandler(c echo.Context) error {
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName)
+
+	dbConn, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error connecting to database: %v", err))
+	}
+	defer dbConn.Close()
+
+	err = dbConn.Ping()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("Database is not ready: %v", err))
+	}
+
+	return c.String(http.StatusOK, "Database is ready")
+}
